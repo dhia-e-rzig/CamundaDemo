@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0mvdmar" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.3.5">
+  <bpmn:process id="helloworld" name="Helloworld" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Dis Bonjour" camunda:formKey="embedded:app:forms/dis-bonjour.html">
+      <bpmn:outgoing>SequenceFlow_09p340f</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="Task_11hx9w4" name="Ajouter Bonjour" camunda:formKey="embedded:app:forms/bonjour.html" camunda:assignee="john">
+      <bpmn:incoming>SequenceFlow_09p340f</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1piu7ef</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="EndEvent_1nbfs63">
+      <bpmn:incoming>SequenceFlow_00y1755</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_09p340f" sourceRef="StartEvent_1" targetRef="Task_11hx9w4" />
+    <bpmn:serviceTask id="Task_0nvfm4w" name="Dire Bonjour" camunda:class="tn.insat.eservices.tp2.helloworld.ProcessRequestDelegate">
+      <bpmn:incoming>SequenceFlow_1312xn0</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_00y1755</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_00y1755" sourceRef="Task_0nvfm4w" targetRef="EndEvent_1nbfs63" />
+    <bpmn:serviceTask id="Task_0wfkh7y" name="Consulter Meteo">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="url">
+              <camunda:script scriptFormat="Javascript">var ville=execution.getVariable("ville"); 'http://api.openweathermap.org/data/2.5/weather?APPID=17db59488cadcad345211c36304a9266&amp;q='+ville;</camunda:script>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="method">GET</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:map>
+                <camunda:entry key="accept">application/json </camunda:entry>
+                <camunda:entry key="content-type">application/json</camunda:entry>
+              </camunda:map>
+            </camunda:inputParameter>
+            <camunda:outputParameter name="WsResponse">
+              <camunda:script scriptFormat="Javascript">S(response).prop("main").prop("temp").numberValue();</camunda:script>
+            </camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1piu7ef</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1312xn0</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1piu7ef" sourceRef="Task_11hx9w4" targetRef="Task_0wfkh7y" />
+    <bpmn:sequenceFlow id="SequenceFlow_1312xn0" sourceRef="Task_0wfkh7y" targetRef="Task_0nvfm4w" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="helloworld">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="169" y="142" width="57" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_0gyugey_di" bpmnElement="Task_11hx9w4">
+        <dc:Bounds x="270" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1nbfs63_di" bpmnElement="EndEvent_1nbfs63">
+        <dc:Bounds x="822" y="82" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_09p340f_di" bpmnElement="SequenceFlow_09p340f">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="270" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_16bip0j_di" bpmnElement="Task_0nvfm4w">
+        <dc:Bounds x="610" y="90" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_00y1755_di" bpmnElement="SequenceFlow_00y1755">
+        <di:waypoint x="710" y="130" />
+        <di:waypoint x="766" y="130" />
+        <di:waypoint x="766" y="100" />
+        <di:waypoint x="822" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0ymc5t4_di" bpmnElement="Task_0wfkh7y">
+        <dc:Bounds x="480" y="200" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1piu7ef_di" bpmnElement="SequenceFlow_1piu7ef">
+        <di:waypoint x="370" y="117" />
+        <di:waypoint x="425" y="117" />
+        <di:waypoint x="425" y="240" />
+        <di:waypoint x="480" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1312xn0_di" bpmnElement="SequenceFlow_1312xn0">
+        <di:waypoint x="580" y="240" />
+        <di:waypoint x="595" y="240" />
+        <di:waypoint x="595" y="130" />
+        <di:waypoint x="610" y="130" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
